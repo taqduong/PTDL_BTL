@@ -24,6 +24,10 @@ print(df.head())
 # =====================================================================
 print("\n--- Bắt đầu Tiền xử lý dữ liệu ---")
 
+# TÓM LƯỢC DỮ LIỆU
+print("\nBảng tóm lược dữ liệu (describe):")
+print(df.describe())
+
 # 1. Ép kiểu cột date_time sang định dạng datetime chuẩn của Pandas
 df['date_time'] = pd.to_datetime(df['date_time'])
 
@@ -35,10 +39,10 @@ df['Month'] = df['date_time'].dt.month
 # 3. Tạo biến nhị phân phân biệt ngày đi làm và ngày nghỉ cuối tuần
 df['Is_Weekend'] = df['DayOfWeek'].apply(lambda x: 1 if x >= 5 else 0)
 
-# 4. Làm sạch dữ liệu: Lọc bỏ các bản ghi bị lỗi cảm biến nhiệt độ (0 độ Kelvin)
+# 5. Làm sạch dữ liệu: Lọc bỏ lỗi nhiệt độ 0K và lượng mưa cực đoan (9831.3 mm)
 initial_rows = len(df)
-df = df[df['temp'] > 0]
-print(f"Đã xóa {initial_rows - len(df)} dòng dữ liệu lỗi nhiệt độ 0K.")
+df = df[(df['temp'] > 0) & (df['rain_1h'] < 9800)]
+print(f"Đã xóa {initial_rows - len(df)} dòng dữ liệu lỗi (nhiệt độ 0K và mưa bất thường).")
 
 # =====================================================================
 # BƯỚC 3: PHÂN TÍCH MÔ TẢ (EDA) & TRỰC QUAN HÓA
